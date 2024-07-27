@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import {
   Container,
   Grid,
-  Box,
   FormControl,
   InputLabel,
   Select,
@@ -13,16 +12,21 @@ import {
   CircularProgress,
   TextField,
   Alert,
+  AppBar,
+  Toolbar,
   Button,
+  Box,
 } from "@mui/material";
-import Navbar from "../components/NavBar";
+import { useNavigate } from "react-router-dom";
 
-const Dashboard = () => {
+const WebPage = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortCriteria, setSortCriteria] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   const token = localStorage.getItem("token"); // Assuming the token is stored in localStorage
 
@@ -82,18 +86,6 @@ const Dashboard = () => {
     setSortCriteria(event.target.value);
   };
 
-  const handleBuyNow = (bookId) => {
-    // Handle the "Buy Now" action
-    console.log("Buying book with ID:", bookId);
-    // Implement the actual purchase logic here
-  };
-
-  const handleAddToCart = (bookId) => {
-    // Handle the "Add to Cart" action
-    console.log("Adding book with ID:", bookId, "to cart");
-    // Implement the actual add to cart logic here
-  };
-
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -122,8 +114,44 @@ const Dashboard = () => {
 
   return (
     <div>
-      <Navbar />
-
+      <AppBar position="fixed">
+        <Toolbar>
+          <Container maxWidth="lg">
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography
+                variant="h6"
+                sx={{ flexGrow: 1, textAlign: "center" }}
+              >
+                BookStore
+              </Typography>
+              <Box>
+                <Button
+                  onClick={() => navigate("/login")}
+                  color="inherit"
+                  sx={{
+                    marginLeft: 2,
+                    backgroundColor: "whitesmoke",
+                    color: "black",
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  onClick={() => navigate("/signup")}
+                  color="inherit"
+                  sx={{ marginLeft: 2, backgroundColor: "red" }}
+                >
+                  Signup
+                </Button>
+              </Box>
+            </Box>
+          </Container>
+        </Toolbar>
+      </AppBar>
       <Container sx={{ mt: 5 }}>
         <Box
           display="flex"
@@ -222,4 +250,135 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default WebPage;
+// import React, { useState, useEffect, useMemo } from "react";
+// import {
+//   Container,
+//   Grid,
+//   Box,
+//   FormControl,
+//   InputLabel,
+//   Select,
+//   MenuItem,
+//   Card,
+//   CardContent,
+//   Typography,
+//   CircularProgress,
+//   TextField,
+//   Alert,
+//   Button,
+// } from "@mui/material";
+// import Navbar from "../components/NavBar";
+
+// const Dashboard = () => {
+//   const [books, setBooks] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [sortCriteria, setSortCriteria] = useState("");
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [error, setError] = useState(null);
+
+//   const token = localStorage.getItem("token"); // Assuming the token is stored in localStorage
+
+//   // Fetch books from the server
+//   useEffect(() => {
+//     const fetchBooks = async () => {
+//       try {
+//         const response = await fetch(
+//           "http://localhost:3000/api/books/getbooks",
+//           {
+//             headers: {
+//               Authorization: `Bearer ${token}`,
+//             },
+//           }
+//         );
+
+//         if (!response.ok) {
+//           if (response.status === 401) {
+//             setError("Unauthorized. Please log in.");
+//           } else {
+//             setError("Failed to fetch books.");
+//           }
+//           setBooks([]); // Clear books state on error
+//           setLoading(false);
+//           return;
+//         }
+
+//         const data = await response.json();
+//         if (Array.isArray(data.books)) {
+//           setBooks(data.books);
+//         } else {
+//           console.error("Fetched data is not an array:", data);
+
+//           setError("Failed to fetch books.");
+//           setBooks([]); // Clear books state on error
+//         }
+//         setLoading(false);
+//       } catch (error) {
+//         console.error("Error fetching books:", error);
+//         setError("Error fetching books.");
+//         setBooks([]); // Clear books state on error
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchBooks();
+
+//     return () => {
+//       // Cleanup function: Clear state when component unmounts
+//       setBooks([]);
+//       setError(null);
+//       setLoading(true);
+//     };
+//   }, [token]);
+
+//   const handleSortChange = (event) => {
+//     setSortCriteria(event.target.value);
+//   };
+
+//   const handleBuyNow = (bookId) => {
+//     // Handle the "Buy Now" action
+//     console.log("Buying book with ID:", bookId);
+//     // Implement the actual purchase logic here
+//   };
+
+//   const handleAddToCart = (bookId) => {
+//     // Handle the "Add to Cart" action
+//     console.log("Adding book with ID:", bookId, "to cart");
+//     // Implement the actual add to cart logic here
+//   };
+
+//   const handleSearchChange = (event) => {
+//     setSearchQuery(event.target.value);
+//   };
+
+//   const sortedBooks = useMemo(() => {
+//     const sorted = [...books];
+//     if (sortCriteria === "title") {
+//       sorted.sort((a, b) => a.title.localeCompare(b.title));
+//     } else if (sortCriteria === "author") {
+//       sorted.sort((a, b) => a.author.localeCompare(b.author));
+//     } else if (sortCriteria === "price") {
+//       sorted.sort((a, b) => a.price - b.price);
+//     }
+//     return sorted;
+//   }, [books, sortCriteria]);
+
+//   const filteredBooks = useMemo(() => {
+//     return sortedBooks.filter((book) => {
+//       // Guard against undefined book.title
+//       if (book.title) {
+//         return book.title.toLowerCase().includes(searchQuery.toLowerCase());
+//       }
+//       return false; // Or handle as per your application's logic
+//     });
+//   }, [sortedBooks, searchQuery]);
+
+//   return (
+//     <div>
+//       <Navbar />
+
+//     </div>
+//   );
+// };
+
+// export default Dashboard;

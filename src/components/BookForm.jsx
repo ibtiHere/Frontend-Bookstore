@@ -1,49 +1,53 @@
-// src/components/BookForm.js
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { TextField, Button, Box } from "@mui/material";
 
-const BookForm = ({ addBook }) => {
-  const [book, setBook] = useState({ title: "", author: "", price: "" });
-
-  const handleChange = (e) => {
-    setBook({ ...book, [e.target.name]: e.target.value });
-  };
+const BookForm = ({ onSubmit }) => {
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addBook(book);
-    setBook({ title: "", author: "", price: "" });
+    onSubmit({ title, author, description, image });
+    setTitle("");
+    setAuthor("");
+    setDescription("");
+    setImage("");
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-      <Typography variant="h6">Post a New Book</Typography>
+    <Box component="form" onSubmit={handleSubmit}>
       <TextField
+        fullWidth
         label="Title"
-        name="title"
-        value={book.title}
-        onChange={handleChange}
-        fullWidth
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
         margin="normal"
       />
       <TextField
+        fullWidth
         label="Author"
-        name="author"
-        value={book.author}
-        onChange={handleChange}
-        fullWidth
+        value={author}
+        onChange={(e) => setAuthor(e.target.value)}
         margin="normal"
       />
       <TextField
-        label="Price"
-        name="price"
-        value={book.price}
-        onChange={handleChange}
         fullWidth
+        label="Description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        margin="normal"
+      />
+      <TextField
+        fullWidth
+        label="Image URL"
+        value={image}
+        onChange={(e) => setImage(e.target.value)}
         margin="normal"
       />
       <Button type="submit" variant="contained" color="primary">
-        Post
+        Add Book
       </Button>
     </Box>
   );

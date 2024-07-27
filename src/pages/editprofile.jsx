@@ -10,23 +10,23 @@ import {
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 import Navbar from "../components/NavBar";
-// import { fetchUserProfile } from "../services/profileService";
-// import { updateUserProfile } from "../services/profileService"; // Assume this exists
 
 const EditProfile = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [bio, setBio] = useState("");
+
   const [profileImage, setProfileImage] = useState(null);
+  // get jwt token
+
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/login";
+  }
+  // Fetch user profile
 
   useEffect(() => {
     const getUserProfile = async () => {
       try {
-        const data = await fetchUserProfile();
-        setName(data.name);
-        setEmail(data.email);
-        setBio(data.bio);
-        setProfileImage(data.profileImage);
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
       }
@@ -94,14 +94,14 @@ const EditProfile = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <TextField
+          {/* <TextField
             label="Bio"
             variant="outlined"
             multiline
             rows={4}
             value={bio}
             onChange={(e) => setBio(e.target.value)}
-          />
+          /> */}
           <Button type="submit" variant="contained" color="primary">
             Save Changes
           </Button>

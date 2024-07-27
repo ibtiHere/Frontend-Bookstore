@@ -9,17 +9,19 @@ import "./App.css";
 import AddBook from "./pages/addbook";
 import Profile from "./pages/profile";
 import EditProfile from "./pages/editprofile";
+import WebPage from "./pages/webPage";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<WebPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/forgot-password" element={<ForgetPasswordPage />} />
         <Route path="/verify-otp" element={<VerifyOtpPage />} />
-        <Route path="/dashboard" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/add-book" element={<AddBook />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/edit-profile" element={<EditProfile />} />
